@@ -63,7 +63,7 @@ def header(ano, mes, moeda, smp):
     sheet.merge_cells('G6:G7')
 
     sheet['D9'] = 'Saldo do Mês Anterior'
-    sheet['E9'] = ' ' + smp
+    sheet['E9'] = ' ' + str(smp)
 
     # Formatação
     celula = sheet['A5']
@@ -144,7 +144,7 @@ def header(ano, mes, moeda, smp):
     # Salvar o arquivo
     wb.save('Custo_Entrada&Saida.xlsx')
 
-def corpo():
+def corpo(lista, mes, ano):
     """
     Função para adicionar itens ao Diário de Caixa, calculando o saldo de forma dinâmica.
 
@@ -158,34 +158,79 @@ def corpo():
     Saída:
         Imprime a lista final de itens adicionados.
     """
-    
+# Carregar o arquivo Excel existente e acessar a planilha correta
+    wb = openpyxl.load_workbook('Custo_Entrada&Saida.xlsx')    
+    sheet = wb[f'Tabela Custo de Entrada&Saida-{mes}_{ano}']
+    cont_table = 10 # Contador para controlar a linha onde os itens serão inseridos, iniciando na linha 10 (após o saldo do mês anterior)
 
+# Iterar sobre a lista de itens e adicionar cada um à planilha, formatando as células conforme necessário
+    for i in range(len(lista)):
+        item = lista[i]
+        #print(f'Nº: {item[0]}, Data: {item[1]}, Designação: {item[2]}, Entrada: {item[3]}, Saída: {item[4]}, Saldo: {item[5]}')
+        sheet.merge_cells(f'C{cont_table}:D{cont_table}') # Mesclar as células C e D para a designação
 
-header(input('Ano, ex: 2026 > '), input('Mês, ex: JANEIRO > ').upper(),
-         input('Moeda, ex: AKZ > ').upper(), input('Saldo do Mês Antrior, prime ENTER caso seja 0 > '))
+    # Adicionar os valores do item às células correspondentes e aplicar formatação
+        sheet[f'A{cont_table}'] = item[0]
+        sheet[f'B{cont_table}'] = item[1]
+        sheet[f'C{cont_table}'] = item[2]
+        sheet.alignment = Alignment(horizontal='center', vertical='center')
+        sheet[f'E{cont_table}'] = item[3]
+        sheet[f'F{cont_table}'] = item[4]
+        sheet[f'G{cont_table}'] = item[5]
+
+    # Aplicar formatação de fonte e bordas às células do item
+        sheet[f'A{cont_table}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+        sheet[f'B{cont_table}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+        sheet[f'C{cont_table}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+        sheet[f'E{cont_table}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+        sheet[f'F{cont_table}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+        sheet[f'G{cont_table}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+        
+    # Aplicar bordas finas às células do item
+        linha_fina = openpyxl.styles.Side(color='000000', style='thin')
+        bordas_finas = openpyxl.styles.Border(left=linha_fina, right=linha_fina, top=linha_fina, bottom=linha_fina)
+        sheet[f'A{cont_table}'].border = bordas_finas
+        sheet[f'B{cont_table}'].border = bordas_finas
+        sheet[f'C{cont_table}'].border = bordas_finas
+        sheet[f'E{cont_table}'].border = bordas_finas
+        sheet[f'F{cont_table}'].border = bordas_finas
+        sheet[f'G{cont_table}'].border = bordas_finas
+        cont_table += 1
+    # Salvar o arquivo
+    wb.save('Custo_Entrada&Saida.xlsx')
+
+# Solicitar ao usuário o saldo do mês anterior, ano, mês e moeda para configurar o template do Diário de Caixa
+smp = float(input('Saldo do Mês Antrior, prime ENTER caso seja 0 > '))
+ano = input('Ano, ex: 2026 > ')
+mes = input('Mês, ex: JANEIRO > ').upper()
+header(ano, mes, input('Moeda, ex: AKZ > ').upper(), smp) # Criar o template do Diário de Caixa com as informações fornecidas
 
 lista_itens = []  # Lista para armazenar os itens adicionados, cada item é uma lista: [Nº, Data, Designação, Entrada, Saída, Saldo]
 
+# Loop para adicionar itens ao Diário de Caixa, solicitando ao usuário os detalhes de cada item e calculando o saldo atual
 while True:
+# Solicitar ao usuário se deseja adicionar um novo item à tabela. Se sim, solicitar os detalhes do item e calcular o saldo atual com base no saldo do mês anterior e no saldo do último item adicionado.
     if input('Adicionar um novo item a tabela? S/n > ').upper() == 'S':
         data = input('Data (dd-mm-aaaa) > ')
         designacao = input('Designação > ')
         entrada = float(input('Valor de Entrada (0 se não houver) > '))
         saida = float(input('Valor de Saída (0 se não houver) > '))
 
+    # Calcular o saldo atual com base no saldo do mês anterior, saldo do último item e as entradas/saídas do item atual
         if len(lista_itens) == 0:
-            saldo_atual = entrada - saida
+            saldo_atual = smp + entrada - saida
 
         else:
             saldo_anterior = lista_itens[-1][5]  # Saldo do último item
-            saldo_atual = saldo_anterior + entrada - saida
+            saldo_atual = smp + saldo_anterior + entrada - saida
 
         novo_item = [len(lista_itens) + 1, data, designacao, entrada, saida, saldo_atual]
         lista_itens.append(novo_item)
         print(f'Item adicionado: {novo_item}')
 
     else:
-        print('Encerrando a adição de itens. Lista final de itens:\n')
-        for item in lista_itens:
-            print(item)
+        #print('Encerrando a adição de itens. Lista final de itens:\n')
+        corpo(lista_itens, mes, ano) # Adicionar os itens à planilha do Diário de Caixa e salvar o arquivo Excel
+        #for item in lista_itens:
+         #   print(item)
         break
