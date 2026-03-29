@@ -284,6 +284,9 @@ smp = float(input('Saldo do Mês Antrior, prime ENTER caso seja 0 > '))
 des_ant = float(input('Depesa total do mês passado> '))
 ano = input('Ano, ex: 2026 > ')
 mes = input('Mês, ex: JANEIRO > ').upper()
+saldo_atual = 0
+p_total = 0.0
+ativos_total = 0.0
 header(ano, mes, input('Moeda, ex: AKZ > ').upper(), float(smp - des_ant)) # Criar o template do Diário de Caixa com as informações fornecidas
 
 lista_itens = []  # Lista para armazenar os itens adicionados, cada item é uma lista: [Nº, Data, Designação, Entrada, Saída, Saldo]
