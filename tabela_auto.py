@@ -63,7 +63,7 @@ def header(ano, mes, moeda, smp):
     sheet.merge_cells('G6:G7')
 
     sheet['D9'] = 'Saldo do Mês Anterior'
-    sheet['E9'] = ' ' + str(smp)
+    sheet['G9'] = ' ' + str(smp)
 
     # Formatação
     celula = sheet['A5']
@@ -96,15 +96,17 @@ def header(ano, mes, moeda, smp):
 
     sheet['A5'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
 
-    sheet['A6'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
-    sheet['B6'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
-    sheet['C6'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
-    sheet['E6'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
-    sheet['F6'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
-    sheet['G6'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+    sheet['A6'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet['B6'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet['C6'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet['E6'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet['F6'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet['G6'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
 
-    sheet['D9'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
-    sheet['E9'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+    sheet['D9'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet['E9'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+
+    sheet['G9'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
 
     # Estilos da planilha
     # Cores
@@ -136,6 +138,7 @@ def header(ano, mes, moeda, smp):
     bordas_medias = openpyxl.styles.Border(left=linha_media, right=linha_media, top=linha_media, bottom=linha_media)
     bordas_grossas = openpyxl.styles.Border(left=linha_grossa, right=linha_grossa, top=linha_grossa, bottom=linha_grossa)
 
+    estilizar(sheet, ['G1', 'G2', 'G3'], bordas_finas, 'border')
     estilizar(sheet, lista3, bordas_medias, 'border')
     estilizar(sheet,lista2, openpyxl.styles.Border(top=linha_media), 'border')
     estilizar(sheet, ['D9'], openpyxl.styles.Border(left=linha_media, top=linha_media), 'border')
@@ -144,7 +147,7 @@ def header(ano, mes, moeda, smp):
     # Salvar o arquivo
     wb.save('Custo_Entrada&Saida.xlsx')
 
-def corpo(lista, mes, ano):
+def body(lista, mes, ano):
     """
     Função para adicionar itens ao Diário de Caixa, calculando o saldo de forma dinâmica.
 
@@ -158,12 +161,12 @@ def corpo(lista, mes, ano):
     Saída:
         Imprime a lista final de itens adicionados.
     """
-# Carregar o arquivo Excel existente e acessar a planilha correta
+ # Carregar o arquivo Excel existente e acessar a planilha correta
     wb = openpyxl.load_workbook('Custo_Entrada&Saida.xlsx')    
     sheet = wb[f'Tabela Custo de Entrada&Saida-{mes}_{ano}']
     cont_table = 10 # Contador para controlar a linha onde os itens serão inseridos, iniciando na linha 10 (após o saldo do mês anterior)
 
-# Iterar sobre a lista de itens e adicionar cada um à planilha, formatando as células conforme necessário
+ # Iterar sobre a lista de itens e adicionar cada um à planilha, formatando as células conforme necessário
     for i in range(len(lista)):
         item = lista[i]
         #print(f'Nº: {item[0]}, Data: {item[1]}, Designação: {item[2]}, Entrada: {item[3]}, Saída: {item[4]}, Saldo: {item[5]}')
@@ -199,38 +202,123 @@ def corpo(lista, mes, ano):
     # Salvar o arquivo
     wb.save('Custo_Entrada&Saida.xlsx')
 
+def footer(lista, mes, ano, sexo, nome, saldo_atual, p_total, saldo_anterior, despesa_anterior, ativos_total):
+    wb = openpyxl.load_workbook('Custo_Entrada&Saida.xlsx')    
+    sheet = wb[f'Tabela Custo de Entrada&Saida-{mes}_{ano}']
+
+    tamanho = len(lista) + 10 # Calcular o tamanho da tabela com base na quantidade de itens adicionados, considerando a linha inicial (10) e o saldo do mês anterior (linha 9)
+    #print(f'{tamanho}')  Imprimir o tamanho da tabela para verificação
+
+    branco = PatternFill(fill_type='solid', start_color='FFFFFF', end_color='FFFFFF')
+    cinzento = PatternFill(fill_type='solid', start_color='808080', end_color='808080')
+    laranja = PatternFill(fill_type='solid', start_color='ffc000', end_color='ffc000')
+
+    lista1 = [f'A{tamanho}', f'B{tamanho}', f'C{tamanho}', f'D{tamanho}', f'F{tamanho}', f'E{tamanho + 2}', f'F{tamanho + 2}', f'G{tamanho + 2}', f'G{tamanho + 4}']
+    lista2 = [f'E{tamanho + 3}', f'F{tamanho + 3}', f'G{tamanho + 3}']
+
+    estilizar(sheet, lista1, cinzento, 'fill')
+    estilizar(sheet, [f'E{tamanho}', f'G{tamanho}'], branco, 'fill')
+    estilizar(sheet, [f'A{tamanho + 1}', f'B{tamanho + 1}', f'C{tamanho + 1}', f'D{tamanho + 1}', f'E{tamanho + 1}', f'F{tamanho + 1}', f'G{tamanho + 1}'], branco, 'fill')
+    estilizar(sheet, [f'D{tamanho + 2}', f'D{tamanho + 3}', f'D{tamanho + 4}', f'A{tamanho + 5}', f'A{tamanho + 6}', f'A{tamanho + 7}', f'B{tamanho + 5}', f'B{tamanho + 6}', f'B{tamanho + 7}', f'C{tamanho + 5}', f'C{tamanho + 6}', f'C{tamanho + 7}'], branco, 'fill')
+
+    linha_fina = openpyxl.styles.Side(color='000000', style='thin')
+    linha_media = openpyxl.styles.Side(color='000000', style='medium')
+    bordas_medias = openpyxl.styles.Border(right=linha_media, left=linha_media, top=linha_media, bottom=linha_media)
+
+    estilizar(sheet, lista2, laranja, 'fill')
+    estilizar(sheet, lista1, bordas_medias, 'border')
+    estilizar(sheet, lista2, bordas_medias, 'border')
+    estilizar(sheet, [f'E{tamanho}', f'A{tamanho + 7}', f'B{tamanho + 7}', f'C{tamanho + 7}'], openpyxl.styles.Border(bottom=linha_fina), 'border')
+    estilizar(sheet, [f'G{tamanho}'], openpyxl.styles.Border(right=linha_fina, bottom=linha_fina), 'border')
+
+    sheet[f'D{tamanho + 2}'] = 'MOVIMENTOS DO MÊS'
+    sheet[f'D{tamanho + 3}'] = 'SALDO DO MÊS ANTERIOR'
+    sheet[f'D{tamanho + 4}'] = 'SALDO DO MÊS SEGUINTE'
+    sheet[f'E{tamanho + 4}'] = '|------------»»»»»»»»»»»»'
+
+    sheet[f'F{tamanho}'] = float(p_total)
+    sheet[f'G{tamanho}'] = float(saldo_atual)
+    sheet[f'E{tamanho + 2}'] = float(ativos_total)
+    sheet[f'F{tamanho + 2}'] = float(p_total)
+    sheet[f'G{tamanho + 2}'] = float(ativos_total - p_total)
+
+    sheet[f'E{tamanho + 3}'] = float(saldo_anterior)
+    sheet[f'F{tamanho + 3}'] = float(despesa_anterior)
+    sheet[f'G{tamanho + 3}'] = float(saldo_anterior - despesa_anterior)
+
+    sheet[f'G{tamanho + 4}'] = '+' + str(float(smp - des_ant + saldo_atual))
+
+    sheet[f'E{tamanho + 2}'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet[f'F{tamanho + 2}'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet[f'G{tamanho + 2}'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet[f'E{tamanho + 3}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+    sheet[f'F{tamanho + 3}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+    sheet[f'G{tamanho + 3}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+    sheet[f'G{tamanho + 4}'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet[f'F{tamanho}'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
+    sheet[f'G{tamanho}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+
+    sheet.merge_cells(f'A{tamanho}:D{tamanho}')
+    sheet.merge_cells(f'A{tamanho + 5}:B{tamanho + 5}')
+    sheet.merge_cells(f'A{tamanho + 6}:B{tamanho + 6}')
+
+    if sexo.upper() == 'F':
+        sheet[f'A{tamanho + 5}'] = 'A TESOUREIRA'
+    elif sexo.upper() == 'M':
+        sheet[f'A{tamanho + 5}'] = 'O TESOUREIRO'
+    else:
+        sheet[f'A{tamanho + 5}'] = 'O/A TESOUREIRO/A'
+
+    sheet[f'A{tamanho + 6}'] = str(nome)
+
+    sheet[f'D{tamanho + 2}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+    sheet[f'D{tamanho + 3}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+    sheet[f'D{tamanho + 4}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
+    sheet[f'A{tamanho + 5}'].font = Font(name='Times New Roman', size=11, bold=False, color="000000")
+    sheet[f'A{tamanho + 6}'].font = Font(name='Times New Roman', size=11, bold=False, color="000000")
+    # Salvar o arquivo
+    wb.save('Custo_Entrada&Saida.xlsx')
+        
 # Solicitar ao usuário o saldo do mês anterior, ano, mês e moeda para configurar o template do Diário de Caixa
 smp = float(input('Saldo do Mês Antrior, prime ENTER caso seja 0 > '))
+des_ant = float(input('Depesa total do mês passado> '))
 ano = input('Ano, ex: 2026 > ')
 mes = input('Mês, ex: JANEIRO > ').upper()
-header(ano, mes, input('Moeda, ex: AKZ > ').upper(), smp) # Criar o template do Diário de Caixa com as informações fornecidas
+header(ano, mes, input('Moeda, ex: AKZ > ').upper(), float(smp - des_ant)) # Criar o template do Diário de Caixa com as informações fornecidas
 
 lista_itens = []  # Lista para armazenar os itens adicionados, cada item é uma lista: [Nº, Data, Designação, Entrada, Saída, Saldo]
 
 # Loop para adicionar itens ao Diário de Caixa, solicitando ao usuário os detalhes de cada item e calculando o saldo atual
 while True:
 # Solicitar ao usuário se deseja adicionar um novo item à tabela. Se sim, solicitar os detalhes do item e calcular o saldo atual com base no saldo do mês anterior e no saldo do último item adicionado.
-    if input('Adicionar um novo item a tabela? S/n > ').upper() == 'S':
-        data = input('Data (dd-mm-aaaa) > ')
-        designacao = input('Designação > ')
-        entrada = float(input('Valor de Entrada (0 se não houver) > '))
-        saida = float(input('Valor de Saída (0 se não houver) > '))
+    if input('Adicionar um novo item a tabela? (S/n)> ').upper() == 'S':
+        data = input('Data (dd-mm-aaaa)> ')
+        designacao = input('Designação> ')
+        entrada = float(input('Valor de Entrada (0 se não houver)> '))
+        saida = float(input('Valor de Saída (0 se não houver)>  '))
 
     # Calcular o saldo atual com base no saldo do mês anterior, saldo do último item e as entradas/saídas do item atual
         if len(lista_itens) == 0:
-            saldo_atual = smp + entrada - saida
+            saldo_atual = smp - des_ant + entrada - saida
 
         else:
             saldo_anterior = lista_itens[-1][5]  # Saldo do último item
-            saldo_atual = smp + saldo_anterior + entrada - saida
+            saldo_atual = saldo_anterior + entrada - saida
 
         novo_item = [len(lista_itens) + 1, data, designacao, entrada, saida, saldo_atual]
         lista_itens.append(novo_item)
         print(f'Item adicionado: {novo_item}')
 
+        p_total = float(0)  # Variável para acumular o total de entradas e saídas
+        ativos_total = float(0)
+        for item in lista_itens:
+            p_total += float(item[4])
+            ativos_total += float(item[3])
+
     else:
         #print('Encerrando a adição de itens. Lista final de itens:\n')
-        corpo(lista_itens, mes, ano) # Adicionar os itens à planilha do Diário de Caixa e salvar o arquivo Excel
+        body(lista_itens, mes, ano) # Adicionar os itens à planilha do Diário de Caixa e salvar o arquivo Excel
+        footer(lista_itens, mes, ano, input('Sexo (M/F)> '), input('Nome> '), saldo_atual, p_total, smp, des_ant, ativos_total) # Adicionar o rodapé à planilha do Diário de Caixa e salvar o arquivo Excel
         #for item in lista_itens:
          #   print(item)
         break
