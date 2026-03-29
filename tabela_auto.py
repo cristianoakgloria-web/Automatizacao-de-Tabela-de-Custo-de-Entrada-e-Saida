@@ -246,7 +246,7 @@ def footer(lista, mes, ano, sexo, nome, saldo_atual, p_total, saldo_anterior, de
     sheet[f'F{tamanho + 3}'] = float(despesa_anterior)
     sheet[f'G{tamanho + 3}'] = float(saldo_anterior - despesa_anterior)
 
-    sheet[f'G{tamanho + 4}'] = '+' + str(float(smp - des_ant + saldo_atual))
+    sheet[f'G{tamanho + 4}'] = '+' + str(float(saldo_anterior - despesa_anterior + saldo_atual))
 
     sheet[f'E{tamanho + 2}'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
     sheet[f'F{tamanho + 2}'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
@@ -280,48 +280,50 @@ def footer(lista, mes, ano, sexo, nome, saldo_atual, p_total, saldo_anterior, de
     wb.save('Custo_Entrada&Saida.xlsx')
         
 # Solicitar ao usuário o saldo do mês anterior, ano, mês e moeda para configurar o template do Diário de Caixa
-smp = float(input('Saldo do Mês Antrior, prime ENTER caso seja 0 > '))
-des_ant = float(input('Depesa total do mês passado> '))
-ano = input('Ano, ex: 2026 > ')
-mes = input('Mês, ex: JANEIRO > ').upper()
-saldo_atual = 0
-p_total = 0.0
-ativos_total = 0.0
-header(ano, mes, input('Moeda, ex: AKZ > ').upper(), float(smp - des_ant)) # Criar o template do Diário de Caixa com as informações fornecidas
+#smp = float(input('Saldo do Mês Antrior, prime ENTER caso seja 0 > '))
+#des_ant = float(input('Depesa total do mês passado> '))
+#ano = input('Ano, ex: 2026 > ')
+#mes = input('Mês, ex: JANEIRO > ').upper()
+#saldo_atual = 0
+#p_total = 0.0
+#ativos_total = 0.0
+#header(ano, mes, input('Moeda, ex: AKZ > ').upper(), float(smp - des_ant)) # Criar o template do Diário de Caixa com as informações fornecidas
 
-lista_itens = []  # Lista para armazenar os itens adicionados, cada item é uma lista: [Nº, Data, Designação, Entrada, Saída, Saldo]
+#lista_itens = []  # Lista para armazenar os itens adicionados, cada item é uma lista: [Nº, Data, Designação, Entrada, Saída, Saldo]
 
 # Loop para adicionar itens ao Diário de Caixa, solicitando ao usuário os detalhes de cada item e calculando o saldo atual
-while True:
+#while True:
 # Solicitar ao usuário se deseja adicionar um novo item à tabela. Se sim, solicitar os detalhes do item e calcular o saldo atual com base no saldo do mês anterior e no saldo do último item adicionado.
-    if input('Adicionar um novo item a tabela? (S/n)> ').upper() == 'S':
-        data = input('Data (dd-mm-aaaa)> ')
-        designacao = input('Designação> ')
-        entrada = float(input('Valor de Entrada (0 se não houver)> '))
-        saida = float(input('Valor de Saída (0 se não houver)>  '))
+#    if input('Adicionar um novo item a tabela? (S/n)> ').upper() == 'S':
+#        data = input('Data (dd-mm-aaaa)> ')
+#        designacao = input('Designação> ')
+#        entrada = float(input('Valor de Entrada (0 se não houver)> '))
+#        saida = float(input('Valor de Saída (0 se não houver)>  '))
 
     # Calcular o saldo atual com base no saldo do mês anterior, saldo do último item e as entradas/saídas do item atual
-        if len(lista_itens) == 0:
-            saldo_atual = smp - des_ant + entrada - saida
+ #       if len(lista_itens) == 0:
+  #          saldo_atual = smp - des_ant + entrada - saida
 
-        else:
-            saldo_anterior = lista_itens[-1][5]  # Saldo do último item
-            saldo_atual = saldo_anterior + entrada - saida
+   #     else:
+    #        saldo_anterior = lista_itens[-1][5]  # Saldo do último item
+     #       saldo_atual = saldo_anterior + entrada - saida
 
-        novo_item = [len(lista_itens) + 1, data, designacao, entrada, saida, saldo_atual]
-        lista_itens.append(novo_item)
-        print(f'Item adicionado: {novo_item}')
+      #  novo_item = [len(lista_itens) + 1, data, designacao, entrada, saida, saldo_atual]
+       # lista_itens.append(novo_item)
+       # print(f'Item adicionado: {novo_item}')
 
-        p_total = float(0)  # Variável para acumular o total de entradas e saídas
-        ativos_total = float(0)
-        for item in lista_itens:
-            p_total += float(item[4])
-            ativos_total += float(item[3])
+        #p_total = float(0)  # Variável para acumular o total de entradas e saídas
+       # ativos_total = float(0)
+       # for item in lista_itens:
+        #    p_total += float(item[4])
+#         3   ativos_total += float(item[3])
 
-    else:
+   # else:
         #print('Encerrando a adição de itens. Lista final de itens:\n')
-        body(lista_itens, mes, ano) # Adicionar os itens à planilha do Diário de Caixa e salvar o arquivo Excel
-        footer(lista_itens, mes, ano, input('Sexo (M/F)> '), input('Nome> '), saldo_atual, p_total, smp, des_ant, ativos_total) # Adicionar o rodapé à planilha do Diário de Caixa e salvar o arquivo Excel
+    #    body(lista_itens, mes, ano) # Adicionar os itens à planilha do Diário de Caixa e salvar o arquivo Excel
+     #   footer(lista_itens, mes, ano, input('Sexo (M/F)> '), input('Nome> '), saldo_atual, p_total, smp, des_ant, ativos_total) # Adicionar o rodapé à planilha do 	 
+      #  input("\nProcesso concluído! Pressione ENTER para sair...") # Adicione esta linha
+        #Diário de Caixa e salvar o arquivo Excel
         #for item in lista_itens:
          #   print(item)
-        break
+       # break
