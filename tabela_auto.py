@@ -144,6 +144,20 @@ def header(ano, mes, moeda, smp):
     estilizar(sheet, ['D9'], openpyxl.styles.Border(left=linha_media, top=linha_media), 'border')
     estilizar(sheet, ['G9'], openpyxl.styles.Border(left=linha_media, right=linha_media, top=linha_media), 'border')
 
+    # Este bloco deve estar dentro de uma função ou no final do arquivo antes do save
+    for col in sheet.columns:
+        max_length = 0  # <--- Note os 4 espaços de recuo aqui
+        column = col[0].column_letter 
+        for cell in col:
+            try:
+                if cell.value:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = (max_length + 2)
+        sheet.column_dimensions[column].width = adjusted_width
+
     # Salvar o arquivo
     wb.save('Custo_Entrada&Saida.xlsx')
 
@@ -199,6 +213,20 @@ def body(lista, mes, ano):
         sheet[f'F{cont_table}'].border = bordas_finas
         sheet[f'G{cont_table}'].border = bordas_finas
         cont_table += 1
+
+    # Este bloco deve estar dentro de uma função ou no final do arquivo antes do save
+    for col in sheet.columns:
+        max_length = 0  # <--- Note os 4 espaços de recuo aqui
+        column = col[0].column_letter 
+        for cell in col:
+            try:
+                if cell.value:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = (max_length + 2)
+        sheet.column_dimensions[column].width = adjusted_width
     # Salvar o arquivo
     wb.save('Custo_Entrada&Saida.xlsx')
 
@@ -246,7 +274,7 @@ def footer(lista, mes, ano, sexo, nome, saldo_atual, p_total, saldo_anterior, de
     sheet[f'F{tamanho + 3}'] = float(despesa_anterior)
     sheet[f'G{tamanho + 3}'] = float(saldo_anterior - despesa_anterior)
 
-    sheet[f'G{tamanho + 4}'] = '+' + str(float(saldo_anterior - despesa_anterior + saldo_atual))
+    sheet[f'G{tamanho + 4}'] = '+' + str(float(saldo_atual))
 
     sheet[f'E{tamanho + 2}'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
     sheet[f'F{tamanho + 2}'].font = Font(name='Times New Roman', size=11, bold=True, color="ffffff")
@@ -276,6 +304,15 @@ def footer(lista, mes, ano, sexo, nome, saldo_atual, p_total, saldo_anterior, de
     sheet[f'D{tamanho + 4}'].font = Font(name='Times New Roman', size=11, bold=True, color="000000")
     sheet[f'A{tamanho + 5}'].font = Font(name='Times New Roman', size=11, bold=False, color="000000")
     sheet[f'A{tamanho + 6}'].font = Font(name='Times New Roman', size=11, bold=False, color="000000")
+
+    sheet.column_dimensions['A'].width = 5   # Nº
+    sheet.column_dimensions['B'].width = 15  # Data
+    sheet.column_dimensions['C'].width = 15  # Designação (Parte 1)
+    sheet.column_dimensions['D'].width = 35  # Designação (Parte 2)
+    sheet.column_dimensions['E'].width = 20  # Entradas
+    sheet.column_dimensions['F'].width = 18  # Saídas
+    sheet.column_dimensions['G'].width = 20  # Saldo
+
     # Salvar o arquivo
     wb.save('Custo_Entrada&Saida.xlsx')
         
