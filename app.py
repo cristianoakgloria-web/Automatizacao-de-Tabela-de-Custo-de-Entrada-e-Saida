@@ -22,10 +22,7 @@ st.markdown("""
 
     /* Estilo da sidebar */
     section[data-testid="stSidebar"] {
-        background-color: #1B2432;
-    }
-    section[data-testid="stSidebar"] * {
-        color: #FFFFFF !important;
+        background-color: #1B2432 !important;
     }
     section[data-testid="stSidebar"] .stRadio > label {
         font-size: 16px !important;
@@ -38,12 +35,12 @@ st.markdown("""
 
     /* Cards de métricas */
     .metric-card {
-        background: linear-gradient(135deg, #1B2432, #2C3E50);
+        background: linear-gradient(135deg, #2C3E50, #34495E);
         border-radius: 12px;
         padding: 1.3rem;
         text-align: center;
         border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
         min-height: 120px;
     }
     .metric-card .icon {
@@ -63,17 +60,17 @@ st.markdown("""
         font-weight: 700;
     }
 
-    /* Cards de seções */
+    /* Cards de seções — fundo escuro */
     .section-card {
-        background: #FFFFFF;
+        background: #2C3E50;
         border-radius: 12px;
         padding: 1.5rem;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        border: 1px solid #3D5A80;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         margin-bottom: 1.2rem;
     }
     .section-title {
-        color: #1B2432;
+        color: #E0E0E0;
         font-size: 18px;
         font-weight: 700;
         margin: 0;
@@ -83,14 +80,10 @@ st.markdown("""
     }
 
     /* Tabela estilizada */
-    .stDataFrame {
-        border-radius: 12px !important;
-        overflow: hidden !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    }
     div[data-testid="stDataframe"] thead tr th {
         background-color: #1B2432 !important;
         color: #FFFFFF !important;
+        font-weight: 600 !important;
     }
 
     /* Botões de ação */
@@ -161,13 +154,50 @@ def processar_submissao():
 
 # --- SIDEBAR ---
 with st.sidebar:
-    st.markdown("# 🏦")
-    st.markdown("###### Menu")
-    st.markdown("")
+    st.markdown("""
+    <style>
+        section[data-testid="stSidebar"] {
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-logo {
+            text-align: center;
+            padding: 0.8rem 0 0.3rem 0;
+        }
+        .sidebar-brand {
+            color: #F7C948;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.2rem;
+            letter-spacing: 1px;
+        }
+        .sidebar-menu-label {
+            color: #A0AEC0;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+        }
+        .sidebar-footer {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1rem;
+            text-align: center;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="sidebar-logo">🏦</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-brand">GESTÃO DE CAIXA</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-menu-label">Menu</div>', unsafe_allow_html=True)
     opcao = st.radio("", ["Nova Tabela", "Sobre o App"], label_visibility="collapsed")
     st.markdown("")
-    st.divider()
-    st.caption("Desenvolvido por **Cristiano Glória**")
+
+    with st.container():
+        st.markdown('<div class="sidebar-footer" style="margin-top: auto;"></div>', unsafe_allow_html=True)
+        st.caption("Desenvolvido por **Cristiano Glória**")
 
 # --- HEADER ---
 st.markdown("## 📊 Gestão de Caixa Automática")
